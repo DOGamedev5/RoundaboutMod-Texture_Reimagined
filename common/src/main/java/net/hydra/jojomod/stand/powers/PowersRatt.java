@@ -395,7 +395,35 @@ public class PowersRatt extends NewDashPreset {
     }
 
 
-    Vec3 Placement = null;
+    @Override
+    public void onStandSummon(boolean desummon) {
+        super.onStandSummon(desummon);
+
+        if (!isClient()) {
+            if (desummon) {
+
+                if ( active ) {
+                    hasRattlocated = true;
+
+                    if (this.onCooldown(PowersRatt.SETPLACE)) {
+                        active = false;
+                        Placement = Vec3.ZERO;
+                    }
+                }
+
+            } else {
+                if (hasRattlocated) {
+                    this.setCooldown(PowersRatt.SETPLACE,70);
+                    if (this.getSelf() instanceof Player P) {
+                        S2CPacketUtil.sendCooldownSyncPacket(P,PowersRatt.SETPLACE,70);
+                    }
+                }
+            }
+        }
+    }
+
+    boolean hasRattlocated = false;
+    private Vec3 Placement = null;
     int shieldDelay = 0;
     @Override
     public void tickPower() {
@@ -417,6 +445,11 @@ public class PowersRatt extends NewDashPreset {
             if (this.getSelf().distanceTo(this.getStandEntity(this.getSelf())) > this.getMaxPilotRange() && !this.getStandEntity(this.getSelf()).forceDespawnSet) {
                 RecallClient(true);
             }
+        } else if (this.Placement != null && !Placement.equals(Vec3.ZERO) && !isClient()) {
+            ((ServerLevel)this.getSelf().level()).sendParticles(new DustParticleOptions(new Vector3f(0.86F, 0.28F, 0.48F
+                    ), 1f),
+                    Placement.x(), Placement.y()+0.5F, Placement.z(),
+                    0, 0, 0, 0, 0);
         }
 
 
@@ -535,6 +568,7 @@ public class PowersRatt extends NewDashPreset {
 
     @Override
     public void updateUniqueMoves() {
+        Roundabout.LOGGER.info("TIIICK");
         if (this.getActivePower() == PowersRatt.PLAYER_BURST) {
             if (isClient()) {
                 if (this.attackTimeDuring%2 == 1) {
@@ -833,7 +867,6 @@ public class PowersRatt extends NewDashPreset {
 
     @Override
     public boolean isAttackIneptVisually(byte activeP, int slot) {
-        Roundabout.LOGGER.info(""+isPlaced());
         switch (activeP) {
             case PowersRatt.AUTO -> {
                 if (getShootTarget() == null && isHoldingSneak() && !isAuto() && isPlaced()) {
@@ -982,6 +1015,7 @@ public class PowersRatt extends NewDashPreset {
             if (isPlaced()) {
                 if (this.shotcooldown == 0) {
                     this.shotcooldown = PlaceShootCooldown;
+                    Roundabout.LOGGER.info("FIIRE");
                     ((StandUser) this.getSelf()).roundabout$tryPower(PowersRatt.START_PLACE_BURST, true);
                 }
             } else {
@@ -991,6 +1025,7 @@ public class PowersRatt extends NewDashPreset {
                 }
             }
         }
+
     }
 
 
@@ -1224,17 +1259,4 @@ public class PowersRatt extends NewDashPreset {
     public boolean isStandEnabled() {
         return ClientNetworking.getAppropriateConfig().rattSettings.enableRatt;
     }
-
-
-    //public boolean isWip(){
-    //    return true;
-    //}
-
-    //public Component ifWipListDevStatus(){
-    //    return Component.translatable(  "roundabout.dev_status.active").withStyle(ChatFormatting.AQUA);
-    //}
-
-    //public Component ifWipListDev(){
-    //    return Component.literal(  "Prisma").withStyle(ChatFormatting.YELLOW);
-    //}
 }

@@ -312,6 +312,8 @@ public class VampireGeneralPowers extends PunchingGeneralPowers {
     public void tickPower() {
         super.tickPower();
 
+    //    Roundabout.LOGGER.info(" CA: " + this.getActivePower() + " | " + this.getAttackTime() + " | "+ this.getAttackTimeDuring() + "/" + this.getAttackTimeMax());
+
         //Client only
         if (self.level().isClientSide()) {
 
@@ -369,7 +371,7 @@ public class VampireGeneralPowers extends PunchingGeneralPowers {
                     if (attackTimeDuring > 7) {
                         xTryPower(PowerIndex.NONE, true);
                         tryPowerPacket(NONE);
-                    } else {
+                    } else if (attackTimeDuring > 0) { // atd > 0 ensures lower ping doesn't make you dash further
                         Vec3 grav = new Vec3(0,-0.1f,0);
                         grav = RotationUtil.vecPlayerToWorld(grav,((IGravityEntity)self).roundabout$getGravityDirection());
                         if (self.onGround()){
@@ -379,9 +381,9 @@ public class VampireGeneralPowers extends PunchingGeneralPowers {
                         }
                         Entity TE2 = getTargetEntity(self, 1.4F, 40);
                         if (TE2 != null){
+                            tryIntPowerPacket(BLOOD_CLUTCH_ATTACK,TE2.getId());
                             xTryPower(PowerIndex.NONE, true);
                             tryPowerPacket(NONE);
-                            tryIntPowerPacket(BLOOD_CLUTCH_ATTACK,TE2.getId());
                         }
                     }
                 } else if (getActivePower() == ICE_CLUTCH) {
@@ -392,19 +394,21 @@ public class VampireGeneralPowers extends PunchingGeneralPowers {
                     if (attackTimeDuring > 7) {
                         xTryPower(PowerIndex.NONE, true);
                         tryPowerPacket(NONE);
-                    } else {
-                        Vec3 grav = new Vec3(0,-0.1f,0);
-                        grav = RotationUtil.vecPlayerToWorld(grav,((IGravityEntity)self).roundabout$getGravityDirection());
-                        if (self.onGround()){
+                    } else if (this.attackTimeDuring > 0 ) { // atd > 0 ensures lower ping doesn't make you dash further
+                        Vec3 grav = new Vec3(0, -0.1f, 0);
+                        grav = RotationUtil.vecPlayerToWorld(grav, ((IGravityEntity) self).roundabout$getGravityDirection());
+                        if (self.onGround()) {
                             self.setDeltaMovement(self.getLookAngle().scale(0.5f).add(grav));
                         } else {
                             self.setDeltaMovement(self.getLookAngle().scale(0.4f).add(grav));
                         }
                         Entity TE2 = getTargetEntity(self, 1.4F, 40);
-                        if (TE2 != null){
+                        if (TE2 != null) {
                             xTryPower(PowerIndex.NONE, true);
                             tryPowerPacket(NONE);
-                            tryIntPowerPacket(ICE_CLUTCH_ATTACK,TE2.getId());
+                            tryIntPowerPacket(ICE_CLUTCH_ATTACK, TE2.getId());
+                            xTryPower(PowerIndex.NONE, true);
+                            tryPowerPacket(NONE);
                         }
                     }
                 }
@@ -638,7 +642,7 @@ public class VampireGeneralPowers extends PunchingGeneralPowers {
     }
 
     public void suckImpact(Entity entity){
-        if (!this.self.level().isClientSide()) {
+        if (!this.self.level().isClientSide() && getActivePower() == BLOOD_CLUTCH_ATTACK) {
             if (entity != null) {
                 attackTargetId = 0;
                 float pow;
@@ -707,7 +711,7 @@ public class VampireGeneralPowers extends PunchingGeneralPowers {
     }
 
     public void iceImpact(Entity entity){
-        if (!this.self.level().isClientSide()) {
+        if (!this.self.level().isClientSide() && getActivePower() == ICE_CLUTCH_ATTACK) {
             if (entity != null) {
                 attackTargetId = 0;
                 float pow;
@@ -772,9 +776,16 @@ public class VampireGeneralPowers extends PunchingGeneralPowers {
         }
     }
 
+    @Override
+    public void setActivePower(byte activeMove) {
+        if (activeMove == VampireGeneralPowers.ICE_CLUTCH_2 || activeMove == VampireGeneralPowers.BLOOD_CLUTCH_2) {return;}
+        super.setActivePower(activeMove);
+    }
+
     public void iceClutch2(){
         this.attackTimeDuring = 0;
-        setActivePower(ICE_CLUTCH_2);
+       // setActivePower(ICE_CLUTCH_2);
+        this.activePower = ICE_CLUTCH_2;
         if (!self.level().isClientSide()) {
 
             if (getPlayerPos2() != PlayerPosIndex.CLUTCH_DASH) {
@@ -812,7 +823,8 @@ public class VampireGeneralPowers extends PunchingGeneralPowers {
 
     public void bloodClutch2(){
         this.attackTimeDuring = 0;
-        setActivePower(BLOOD_CLUTCH_2);
+      //  setActivePower(BLOOD_CLUTCH_2);
+        this.activePower = BLOOD_CLUTCH_2;
         if (!self.level().isClientSide()) {
 
             if (getPlayerPos2() != PlayerPosIndex.CLUTCH_DASH) {
@@ -981,20 +993,24 @@ public class VampireGeneralPowers extends PunchingGeneralPowers {
 
     public void doSuckHit(){
         if (!self.level().isClientSide()) {
+            setActivePower(BLOOD_CLUTCH_ATTACK);
             Entity target = null;
             if (attackTargetId > 0) {
                 target = self.level().getEntity(attackTargetId);
             }
             suckImpact(target);
+            setActivePower(PowerIndex.NONE);
         }
     }
     public void doIceHit(){
         if (!self.level().isClientSide()) {
+            setActivePower(ICE_CLUTCH_ATTACK);
             Entity target = null;
             if (attackTargetId > 0) {
                 target = self.level().getEntity(attackTargetId);
             }
             iceImpact(target);
+            setActivePower(PowerIndex.NONE);
         }
     }
     public void doDiveHit(){
