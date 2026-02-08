@@ -718,7 +718,7 @@ public class AbilityScapeBasis {
     /**Override this if you want to add or remove conditions that prevent moves from updating and shut
      * them down*/
     public boolean isAttackInept(byte activeP){
-        return this.self.isUsingItem() || this.isDazed(this.self) || (((TimeStop)this.getSelf().level()).CanTimeStopEntity(this.getSelf())) || this.getStandUserSelf().roundabout$isPossessed();
+        return this.self.isUsingItem() || this.isDazed(this.self) || (((TimeStop)this.getSelf().level()).CanTimeStopEntity(this.getSelf()));
     }
 
     /**If doing something like eating, cancels attack state*/
@@ -1513,6 +1513,7 @@ public class AbilityScapeBasis {
         }
     }
 
+    //Ledge Grab
     @SuppressWarnings("deprecation")
     public boolean doVault(){
         if (!this.self.onGround()) {
@@ -2017,6 +2018,22 @@ public class AbilityScapeBasis {
         if (!(distMax >= 0)) {
             distMax = this.getDistanceOut(User, this.getReach(), false);
         }
+
+
+        /// SAVING THIS FOR LATER
+   /*     StandUser SU = (StandUser) User;
+        if (SU.roundabout$isPossessed() && SU.roundabout$getPossessor() != null) {
+            LivingEntity target = SU.roundabout$getPossessor().getTarget();
+            if (target != null) {
+                if (target.distanceTo(User) < distMax ) {
+                    return target;
+                }
+            }
+
+        }*/
+
+
+
         Entity targetEntity = this.rayCastEntity(User,distMax);
 
         if ((targetEntity != null && User instanceof StandEntity SE && SE.getUser() != null && SE.getUser().is(targetEntity))

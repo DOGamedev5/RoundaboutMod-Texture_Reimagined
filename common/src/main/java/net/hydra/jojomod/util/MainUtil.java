@@ -31,6 +31,7 @@ import net.hydra.jojomod.event.powers.*;
 import net.hydra.jojomod.fates.FatePowers;
 import net.hydra.jojomod.fates.powers.VampiricFate;
 import net.hydra.jojomod.powers.GeneralPowers;
+import net.hydra.jojomod.stand.powers.PowersAnubis;
 import net.hydra.jojomod.stand.powers.PowersJustice;
 import net.hydra.jojomod.item.*;
 import net.hydra.jojomod.networking.ModPacketHandler;
@@ -909,14 +910,17 @@ public class MainUtil {
 
     public static boolean canFreeze(Entity mob){
         return (!isFreezableMobBlacklisted(mob) && !(mob instanceof Mob mb && isBossMob(mb))
+                && !(mob != null && ((TimeStop)mob.level()).CanTimeStopEntity(mob))
         &&  !(mob instanceof LivingEntity le && FateTypes.isVampire(le)));
     }
     public static boolean canDrinkBlood(Entity mob){
-        return (getMobBleed(mob) && !hasEnderBlood(mob) && mob.isAlive() && !mob.isRemoved() &&
+        return (getMobBleed(mob) && !hasEnderBlood(mob) && mob.isAlive() && !mob.isRemoved()
+                && !(mob != null && ((TimeStop)mob.level()).CanTimeStopEntity(mob)) &&
                 !(mob instanceof Mob mb && ((IMob)mb).roundabout$isVampire()));
     }
     public static boolean canDrinkBlood2(Entity mob){
-        return (getMobBleed(mob) && !hasEnderBlood(mob) && mob.isAlive() && !mob.isRemoved());
+        return (getMobBleed(mob) && !hasEnderBlood(mob) && mob.isAlive() && !mob.isRemoved()
+                && !(mob != null && ((TimeStop)mob.level()).CanTimeStopEntity(mob)));
     }
 
     public static boolean canDrinkBloodFair(Entity ent,Entity drinker){
@@ -2194,7 +2198,7 @@ public class MainUtil {
     public static boolean forceAggression(LivingEntity LE){
         if (LE != null){
             StandUser user = ((StandUser) LE);
-            return (user.roundabout$hasAStand() || user.roundabout$getZappedToID() > -1
+            return ( (user.roundabout$hasAStand() && !(user.roundabout$getStandPowers() instanceof PowersAnubis && LE instanceof Cow)   )  || user.roundabout$getZappedToID() > -1
                     || user.rdbt$getFleshBud() != null ||
                     (LE instanceof Mob mb && ((IMob)mb).roundabout$isVampire()));
         }
@@ -3030,6 +3034,19 @@ public class MainUtil {
         }
 
         return closest; // null if no valid hit
+    }
+
+    public static boolean isUnremovableDisc(ItemStack itemStack) {
+        CompoundTag tag = itemStack.getTagElement("Special");
+        return tag != null;
+    }
+
+    public static boolean isTraitorDisc(ItemStack itemStack) {
+        CompoundTag tag = itemStack.getTagElement("Special");
+        if (tag != null) {
+            return tag.getByte("Type") == (byte) 1;
+        }
+        return false;
     }
 
 }

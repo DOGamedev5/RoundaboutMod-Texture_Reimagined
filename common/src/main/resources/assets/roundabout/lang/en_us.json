@@ -281,6 +281,7 @@
   "item.roundabout.painting_venus": "Birth of Venus",
 
   "entity.roundabout.terrier": "Boston Terrier",
+  "entity.roundabout.anubis_guardian": "Anubis Guardian",
   "entity.roundabout.the_world": "The World",
   "entity.roundabout.the_world_ultimate": "The World",
   "entity.roundabout.survivor": "Survivor",
@@ -366,6 +367,8 @@
 
 
   "block.roundabout.meteor_block": "Meteorite Block",
+  "block.roundabout.shiny_quartz": "Shiny Quartz",
+  "block.roundabout.shiny_quartz_tiles": "Shiny Quartz Tiles",
   "block.roundabout.regal_wall": "Regal Wall",
   "block.roundabout.regal_floor": "Regal Floor",
   "block.roundabout.glass_door": "Glass Door",
@@ -506,6 +509,8 @@
 
   "sounds.roundabout.vampire_dash": "Fwoosh",
   "sounds.roundabout.vampire_gleam": "Sparkle",
+  "sounds.roundabout.evil_aura_blast": "Chilling Breeze",
+  "sounds.roundabout.aura_impact": "Aura Impact",
 
   "death.attack.stand": "%1$s died to a mysterious power whilst fighting %2$s",
   "death.attack.stand.item": "%1$s died to a mysterious power whilst fighting %2$s",
@@ -803,7 +808,7 @@
   "sounds.roundabout.stand_barrage_end":  "Heavy Hit",
   "sounds.roundabout.stand_barrage_end_block":  "Heavy Hit",
   "sounds.roundabout.melee_guard":  "Blocked",
-  "sounds.roundabout.hit_sfx1":  "Heavy Hit",
+  "sounds.roundabout.hit_sfx1":  "Deflect",
   "sounds.roundabout.terrier_pass": "Terrier fart",
   "sounds.roundabout.the_world_assault":  "Drifting force",
   "sounds.roundabout.the_world_wry":  "WRY!",
@@ -879,6 +884,9 @@
   "sounds.roundabout.anubis_thrust_cut": "Sword Crit",
   "sounds.roundabout.anubis_thrust_miss": "Sword Whiff",
   "sounds.roundabout.anubis_uppercut": "Sword Swing",
+  "sounds.roundabout.anubis_shieldbreak": "Shieldbreak Charging",
+  "sounds.roundabout.anubis_extra": "Sword Clang",
+
 
 
 
@@ -1060,9 +1068,9 @@
   "instruction.roundabout.shop_item": "Shop Item",
   "instruction.roundabout.use_item": "Item Interaction",
 
-  "instruction.roundabout.anubis_normal": "Press Attack Twice",
-  "instruction.roundabout.anubis_one": "Press Crouch Once",
-  "instruction.roundabout.anubis_two": "Press Crouch Twice",
+  "instruction.roundabout.anubis_normal": "Third Attack - Press Attack Twice",
+  "instruction.roundabout.anubis_one": "Third Attack - Press Crouch Once",
+  "instruction.roundabout.anubis_two": "Third Attack - Press Crouch Twice",
   "instruction.roundabout.press_skill_memory":"Press Skill %1$s While Selecting A Memory",
 
   "ability.roundabout.punch": "Punch",
@@ -1337,7 +1345,7 @@
   "ability.roundabout.anubis_raging_light": "Raging Light",
   "ability.roundabout.anubis_raging_light.desc": "Force all mobs nearby to target you.",
   "ability.roundabout.anubis_backflip": "Backflip",
-  "ability.roundabout.anubis_backflip.desc": "Backflip to safety and can be done midair. Restores your pogo",
+  "ability.roundabout.anubis_backflip.desc": "Backflip to safety and can be done midair, restoring your pogo. Hold sneak to fastfall.",
   "ability.roundabout.anubis_record": "Record Memories",
   "ability.roundabout.anubis_record.desc": "Choose a slot and record a series of inputs. Pressing your hotbar keys lets you change the icon. The duration scales with your level",
   "ability.roundabout.anubis_replay": "Replay Memories",
@@ -1496,8 +1504,10 @@
   "idle.roundabout.ratt_1": "Head",
   "idle.roundabout.ratt_2": "Shoulder",
 
-  "idle.roundabout.anubis_1": "Sword Only",
-  "idle.roundabout.anubis_2": "Humanoid",
+  "idle.roundabout.anubis_1": "Left",
+  "idle.roundabout.anubis_2": "Right",
+  "idle.roundabout.anubis_3": "Back",
+  "idle.roundabout.anubis_4": "None",
 
 
   "skins.roundabout.star_platinum.base": "Part 3",
@@ -1734,6 +1744,8 @@
   "skins.roundabout.anubis.alluring": "Raging",
   "skins.roundabout.anubis.raging": "Alluring",
   "skins.roundabout.anubis.khopesh": "Khopesh",
+  "skins.roundabout.anubis.cleaver": "Cleaver",
+  "skins.roundabout.anubis.illusory": "Illusory",
 
   "roundabout.anubis.playback_title": "Replay Memories",
   "roundabout.anubis.memory_title": "Record Memories",
@@ -1750,6 +1762,7 @@
   "unlock_skin.roundabout.soft_and_wet.kira": "Killer Queen 8 Skin Unlocked!",
   "unlock_skin.roundabout.ratt.rat": "Rat? Unlocked!",
   "unlock_skin.roundabout.walking_heart.spider": "Webbing Heart Skin Unlocked!",
+  "unlock_skin.roundabout.anubis.traitor": "Traitor Skins Unlocked!",
 
   "justice.morph.player": "Player",
   "justice.morph.villager": "Villager",
@@ -2610,6 +2623,10 @@
   "config.roundabout.postTSSoften.desc": "Whether or not players take reduced damage from things beyond your control (gasoline, stand attacks) after a time stop ends. The duration is proportionate to how long they are stopped, and only applies for stops that last more than a second.",
   "config.roundabout.postTSCancel.name": "Post Stop Cancel",
   "config.roundabout.postTSCancel.desc": "Whether or not certain moves get canceled when time resumes. Disable for legacy version.",
+  "config.roundabout.timestopLeapCooldown.name": "Time Stop Leaping Cooldown",
+  "config.roundabout.timestopLeapCooldown.desc": "Time stop is disabled for a short time after a leap",
+  "config.roundabout.timestopCancelsFood.name": "Time Stop Cancels Food",
+  "config.roundabout.timestopCancelsFood.desc": "While in stopped time, you cannot gain healing from food",
 
 
   "config.roundabout.starPlatinumAttackMultOnPlayers.name": "Player Damage Multiplier",

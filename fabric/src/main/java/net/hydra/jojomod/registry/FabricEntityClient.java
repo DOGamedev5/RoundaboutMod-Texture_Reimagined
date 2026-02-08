@@ -8,6 +8,8 @@ import net.hydra.jojomod.client.models.RoadRollerStrayModel;
 import net.hydra.jojomod.client.models.WornBloodyStoneMaskModel;
 import net.hydra.jojomod.client.models.WornStoneMaskModel;
 import net.hydra.jojomod.client.models.corpses.renderers.*;
+import net.hydra.jojomod.client.models.mobs.AnubisGuardianModel;
+import net.hydra.jojomod.client.models.mobs.renderers.AnubisGuardianRenderer;
 import net.hydra.jojomod.client.models.paintings.MonaLisaPaintingRenderer;
 import net.hydra.jojomod.client.models.paintings.VanGoghPaintingRenderer;
 import net.hydra.jojomod.client.models.paintings.VenusPaintingRenderer;
@@ -29,6 +31,7 @@ import net.hydra.jojomod.client.models.npcs.ZombieAestheticianModel;
 import net.hydra.jojomod.client.models.npcs.renderers.ZombieAestheticianRenderer;
 import net.hydra.jojomod.client.models.projectile.renderers.NoRenderer;
 import net.hydra.jojomod.client.models.substand.LifeTrackerModel;
+import net.hydra.jojomod.entity.projectile.EvilAuraProjectile;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.core.Registry;
@@ -49,6 +52,7 @@ public class FabricEntityClient {
     public static void register() {
         /*Renderers*/
         EntityRendererRegistry.register(FabricEntities.TERRIER_DOG, TerrierEntityRenderer::new);
+        EntityRendererRegistry.register(FabricEntities.ANUBIS_GUARDIAN, AnubisGuardianRenderer::new);
         EntityRendererRegistry.register(FabricEntities.STAR_PLATINUM, StarPlatinumRenderer::new);
         EntityRendererRegistry.register(FabricEntities.STAR_PLATINUM_BASEBALL, StarPlatinumBaseballRenderer::new);
         EntityRendererRegistry.register(FabricEntities.THE_WORLD, TheWorldRenderer::new);
@@ -88,8 +92,10 @@ public class FabricEntityClient {
         EntityRendererRegistry.register(FabricEntities.CROSSFIRE_HURRICANE, CrossfireHurricaneRenderer::new);
         EntityRendererRegistry.register(FabricEntities.LIFE_TRACKER, LifeTrackerRenderer::new);
         EntityRendererRegistry.register(FabricEntities.STAND_FIREBALL, StandFireballRenderer::new);
+        EntityRendererRegistry.register(FabricEntities.EVIL_AURA_PROJECTILE, NoRenderer::new);
         EntityRendererRegistry.register(FabricEntities.STAND_ARROW, StandArrowRenderer::new);
         EntityRendererRegistry.register(FabricEntities.THROWN_OBJECT, ThrownObjectRenderer::new);
+        EntityRendererRegistry.register(FabricEntities.THROWN_ANUBIS, ThrownObjectRenderer::new);
         EntityRendererRegistry.register(FabricEntities.CONCEALED_FLAME_OBJECT, ConcealedFlameObjectRenderer::new);
         EntityRendererRegistry.register(FabricEntities.CINDERELLA_VISAGE_DISPLAY, CinderellaVisageDisplayRenderer::new);
         EntityRendererRegistry.register(FabricEntities.GROUND_HURRICANE, NoRenderer::new);
@@ -138,6 +144,7 @@ public class FabricEntityClient {
 
         /*Models*/
         EntityModelLayerRegistry.registerModelLayer(ModEntityRendererClient.WOLF_LAYER, TerrierEntityModel::createBodyLayerTerrier);
+        EntityModelLayerRegistry.registerModelLayer(ModEntityRendererClient.ANUBIS_GUARDIAN_LAYER, AnubisGuardianModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(ModEntityRendererClient.THE_WORLD_LAYER, TheWorldModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(ModEntityRendererClient.THE_WORLD_ULTIMATE_LAYER, TheWorldUltimateModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(ModEntityRendererClient.STAR_PLATINUM_LAYER, StarPlatinumModel::getTexturedModelData);

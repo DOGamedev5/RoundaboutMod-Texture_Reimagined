@@ -140,6 +140,16 @@ public class StandPowers extends AbilityScapeBasis {
     public void tickPowerEnd(){
     }
 
+
+    /// used to make mobs look at you during tickMobAi
+    public void rotateMobHead(LivingEntity attackTarget) {
+        if (!(this.getSelf() instanceof Player)) {
+            float yrot = getLookAtEntityYaw(this.getSelf(), attackTarget);
+            this.getSelf().setXRot(getLookAtEntityPitch(this.getSelf(), attackTarget));
+            this.getSelf().setYRot(yrot);
+            this.getSelf().setYHeadRot(yrot);
+        }
+    }
     /**The AI for a stand User Mob, runs every tick. AttackTarget may be null*/
     public void tickMobAI(LivingEntity attackTarget){
     }
@@ -366,6 +376,19 @@ public class StandPowers extends AbilityScapeBasis {
     /**When you are about to be hit by a projectile, intercept or run code based off of it, or potentially cancel it
      * Currently it supports abstract arrows but this can be expanded*/
     public boolean dealWithProjectile(Entity ent, HitResult res){
+        if (self instanceof Player pl){
+            if (((IPowersPlayer)pl).rdbt$getPowers().dealWithProjectile(ent,res)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean dealWithProjectileNoDiscard(Entity ent, HitResult res){
+        if (self instanceof Player pl){
+            if (((IPowersPlayer)pl).rdbt$getPowers().dealWithProjectileNoDiscard(ent,res)){
+                return true;
+            }
+        }
         return false;
     }
 
@@ -708,6 +731,7 @@ public class StandPowers extends AbilityScapeBasis {
                     this.getSelf().getEyePosition().x, this.getSelf().getEyePosition().y, this.getSelf().getEyePosition().z,
                     20, 0.4, 0.4, 0.4, 0.4);
             this.self.level().playSound(null, this.self.blockPosition(), ModSounds.LEVELUP_EVENT, SoundSource.PLAYERS, 0.95F, (float) (0.8 + (Math.random() * 0.4)));
+            this.getStandUserSelf().roundabout$setStandDisc(MainUtil.saveToDiscData(self,((StandUser)self).roundabout$getStandDisc().copy()));
         }
     }
 

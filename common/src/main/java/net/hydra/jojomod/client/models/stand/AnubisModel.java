@@ -89,6 +89,10 @@ public class AnubisModel extends PsuedoHierarchicalModel {
     public static ResourceLocation chorus = new ResourceLocation(Roundabout.MOD_ID, "textures/stand/anubis/ender.png");
     public static ResourceLocation ancient = new ResourceLocation(Roundabout.MOD_ID, "textures/stand/anubis/ancient.png");
     public static ResourceLocation khopesh = new ResourceLocation(Roundabout.MOD_ID, "textures/stand/anubis/khopesh.png");
+    public static ResourceLocation cleaver = new ResourceLocation(Roundabout.MOD_ID, "textures/stand/anubis/cleaver.png");
+    public static ResourceLocation cleaver_sheathed = new ResourceLocation(Roundabout.MOD_ID, "textures/stand/anubis/cleaver_sheathed.png");
+    public static ResourceLocation illusory = new ResourceLocation(Roundabout.MOD_ID, "textures/stand/anubis/illusory.png");
+    public static ResourceLocation illusory_sheathed = new ResourceLocation(Roundabout.MOD_ID, "textures/stand/anubis/illusory_sheathed.png");
 
 
 
@@ -111,6 +115,11 @@ public class AnubisModel extends PsuedoHierarchicalModel {
             case 13 -> {return alluring;}
             case 14 -> {return khopesh;}
 
+            case 15 -> {return cleaver;}
+            case 16 -> {return illusory;}
+            case 17 -> {return cleaver_sheathed;}
+            case 18 -> {return illusory_sheathed;}
+
             default -> {return anime;}
         }
     }
@@ -121,32 +130,44 @@ public class AnubisModel extends PsuedoHierarchicalModel {
         VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(context, (byte)0)));
         root().render(poseStack, consumer, light, OverlayTexture.NO_OVERLAY);
     }
+
     public void render(Entity context, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
                        int light, float r, float g, float b, float alpha, byte skin) {
+        render(context,partialTicks,poseStack,bufferSource,light,r,g,b,alpha,skin,true);
+    }
+
+    public void render(Entity context, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
+                       int light, float r, float g, float b, float alpha, byte skin, boolean anims) {
         if (context instanceof LivingEntity LE) {
             this.root().getAllParts().forEach(ModelPart::resetPose);
             if (((TimeStop)context.level()).CanTimeStopEntity(context) || ClientUtil.checkIfGamePaused()){
                 partialTicks = 0;
             }
             StandUser user = ((StandUser) LE);
-            if (LE.getUseItem().is(ModItems.ANUBIS_ITEM)) {
-                user.roundabout$getWornStandIdleAnimation().startIfStopped(context.tickCount);
-                this.animate(user.roundabout$getWornStandIdleAnimation(), AnubisAnimations.ItemUnsheathe, partialTicks, 1f);
-            } else {
-                user.roundabout$getWornStandIdleAnimation().stop();
-            }
-            if (user.roundabout$getStandPowers() instanceof PowersAnubis PA && PowerTypes.hasStandActive(LE)) {
-                boolean start = false;
-                AnimationDefinition anim = null;
-                switch (user.roundabout$getStandAnimation()) {
-                    case PowerIndex.GUARD -> {
-                        start = true;
-                        anim = AnubisAnimations.ItemBlock;
+
+            if (anims) {
+
+                if (LE.getUseItem().is(ModItems.ANUBIS_ITEM)) {
+                    user.roundabout$getWornStandIdleAnimation().startIfStopped(context.tickCount);
+                    this.animate(user.roundabout$getWornStandIdleAnimation(), AnubisAnimations.ItemUnsheathe, partialTicks, 1f);
+                } else {
+                    user.roundabout$getWornStandIdleAnimation().stop();
+                }
+                if (user.roundabout$getStandPowers() instanceof PowersAnubis PA && PowerTypes.hasStandActive(LE)) {
+                    boolean start = false;
+                    AnimationDefinition anim = null;
+                    switch (user.roundabout$getStandAnimation()) {
+                        case PowerIndex.GUARD -> {
+                            start = true;
+                            anim = AnubisAnimations.ItemBlock;
+                        }
+                    }
+                    if (start) {
+                        this.animate(user.roundabout$getWornStandAnimation(), anim, partialTicks, 1F);
                     }
                 }
-                if (start) {
-                    this.animate(user.roundabout$getWornStandAnimation(),anim,partialTicks,1F);
-                }
+
+
             }
 
             VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityTranslucent(getTextureLocation(context, skin)));
